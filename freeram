@@ -1,3 +1,6 @@
+## You may wish to put this script under /usr/bin/ directory and change its permission
+## chmod +x /usr/bin/freeram
+
 free -h
 
 # Flush file system buffers by executing
