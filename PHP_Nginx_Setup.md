@@ -169,3 +169,97 @@ and make sure that username group can enter all directories along the path:
 ```
 chmod g+x /<OWNER USERNAME>/
 ```
+
+
+
+## Sample Nginx Configuration for managing multiple hosts (Virtual Hosts) within the same Server
+
+You may create multiple configuration files under 
+``
+/etc/nginx/conf.d/
+```
+
+### Server plain HTML files from http://www.ABC.com/
+
+```
+server {
+    listen         80;
+    server_name    ABC.com www.ABC.com *.ABC.com;
+
+    root           /home/ABC/html;
+    index index.php index.html index.htm;
+    
+    error_log  /home/ABC/logs/nginx_error_log.txt  warn;
+
+    location / {
+
+    }
+}
+
+```
+
+### Serve PHP files from http://www.ABC.com/
+
+```
+server {
+    listen       80;
+    server_name  ABC.com www.ABC.com *.ABC.com;
+
+    root         /home/ABC/html/;
+    index        index.php index.html index.htm;
+
+    location     / {
+        try_files $uri $uri/ =404;
+    }
+
+    error_page    404 /404.html;
+    error_page    500 502 503 504 /50x.html;
+    location       /50x.html {
+        root   /usr/share/nginx/html;
+    }
+    error_log    /ABC/logs/nginx_error_log.txt  error;
+
+    location ~ \.php$ {
+        try_files $uri =404;
+        fastcgi_pass unix:/var/run/php-fpm/php-fpm.sock;
+        fastcgi_index index.php;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        include fastcgi_params;
+    }
+}
+```
+
+## Proxy Connection to NodeJS Servers
+
+```
+server {
+    listen         80;
+    server_name    ABC.com www.ABC.com *.ABC.com;
+
+    location / {
+        proxy_pass http://127.0.0.1:3000;
+        proxy_http_version 1.1;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_cache_bypass $http_upgrade;
+    }
+
+    location /api {
+        proxy_pass http://127.0.0.1:8080;
+        proxy_http_version 1.1;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_cache_bypass $http_upgrade;
+    }
+
+    error_page 404 /404.html;
+    error_page 500 502 503 504 /50x.html;
+    location /50x.html {
+        root   /usr/share/nginx/html;
+    }
+}
+```
