@@ -145,3 +145,27 @@ You probably want to remove this file after this test because it could actually 
 sudo rm /usr/share/nginx/html/info.php
 ```
 You can always recreate this page if you need to access the information again later.
+
+
+## Solve Nginx: stat() failed (13: permission denied)
+
+Nginx operates within the direcotry, so if you can't ```cd``` to that directory from the nginx user then it will fail (as does the stat command in your log). 
+Make sure the <NGINX USER> can ```cd``` all the way to the DIRECTORY. 
+You can confirm that the stat will fail or succeed by running
+
+```
+sudo -u <NGINX USER> stat <DIRECTORY PATH>
+```
+
+Usually the ```<NGINX USER>```  is ```nginx```
+
+The best solution in that case would be to add <NGINX USER> to user group which owns the directory:
+
+```
+gpasswd -a <NGINX USER> <OWNER USERNAME>
+```
+and make sure that username group can enter all directories along the path:
+
+```
+chmod g+x /<OWNER USERNAME>/
+```
