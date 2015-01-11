@@ -175,7 +175,8 @@ chmod g+x /<OWNER USERNAME>/
 ## Sample Nginx Configuration for managing multiple hosts (Virtual Hosts) within the same Server
 
 You may create multiple configuration files under 
-``
+
+```
 /etc/nginx/conf.d/
 ```
 
