@@ -264,3 +264,45 @@ server {
     }
 }
 ```
+
+## Basic Authentication with Nginx
+adapted from (http://roger.steneteg.org/441/basic-authentication-with-nginx/)
+
+In order to prevent public access to your web site a basic protection method available is Basic Authentication. Basic Authentication uses credentials which is sent along the http request in the http header.
+
+When a user sends a http request to a url which is protected with basic authentication the server will send back a **401 Not authorized** response with the **“WWW-Authenticate”** header set. The web browser will then prompt the user with a username and password dialog which will be added to the request.
+
+Then the browser will resend the http request with the **“Authorization”** header set. The authorization header value consist of a string which specifies the authentication method that is used, for basic authentication this would be **“Basic”** and then a base64 encoded string containing the username and password in this format **“username:password“**.
+
+The server will see that the request contains a Authorization header and decode the username and password and use that to authenticate the user.
+
+Remember that the base64 encoded string does not provide any encryption, so the username and password will basically be sent along the request in clear text, which makes it very vulnerable to eavesdropping. So if you are going to use basic authentication the http trafic should be protected by using SSL encryption.
+
+ 
+
+To configure Nginx to use basic authentication you need to add the following configuration to either **http, server, location or limit_except** context:
+
+```
+auth_basic "Restricted Access"; 
+auth_basic_user_file /path/to/.htpasswd;
+```
+
+The **“Restricted Access”** string will be shown on the credentials prompt dialog for the user and can be set to whatever you want. The path to the **.htpasswd** file can either be an absolute path like I use, or a path relative to the directory containing your nginx.conf file.
+
+You can read more about these parameters here http://wiki.nginx.org/HttpAuthBasicModule
+
+The .htpasswd file should contain the valid usernames and password in the **username:password:comment** format separated by newlines.
+
+The passwords should be in an encoded format, here is how to generate passwords in the different available formats:
+
+    # default encryption method for Nginx 
+        openssl passwd -crypt <password>
+        
+    # Apache default htpasswd format 
+        openssl passwd -apr1 <password>
+        
+    # A BSD based MD5 format 
+        openssl passwd -1 <password>
+        
+    # SSHA format 
+        (PASSWORD="<password>";SALT="$(openssl rand -base64 3)";SHA1=$(printf "$PASSWORD$SALT" | openssl dgst -binary -sha1 | sed 's#$#'"$SALT"'#' | base64);printf "{SSHA}$SHA1\n")
