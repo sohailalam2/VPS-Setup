@@ -167,7 +167,7 @@ gpasswd -a <NGINX USER> <OWNER USERNAME>
 and make sure that username group can enter all directories along the path:
 
 ```
-chmod g+x /<OWNER USERNAME>/
+chmod g+x /home/<OWNER USERNAME>/
 ```
 
 
