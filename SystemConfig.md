@@ -21,6 +21,9 @@ Add the below line to the end of file ( *Change the user name before you issue t
 username ALL=(ALL) ALL
 ```
 
+## How To Set Up and Test DNS Subdomains with DigitalOcean's DNS Panel
+Digital Ocean Tutorial (https://www.digitalocean.com/community/tutorials/how-to-set-up-and-test-dns-subdomains-with-digitalocean-s-dns-panel)
+
 
 ## Setting up DNS Record
 
@@ -132,3 +135,6 @@ sudo firewall-cmd --reload
 ip addr show eth0 | grep inet | awk '{ print $2; }' | sed 's/\/.*$//'
 ```
 
+
+## Optimising NginX, Node.JS and networking for heavy workloads
+Tutorial (https://engineering.gosquared.com/optimising-nginx-node-js-and-networking-for-heavy-workloads)
