@@ -138,3 +138,38 @@ ip addr show eth0 | grep inet | awk '{ print $2; }' | sed 's/\/.*$//'
 
 ## Optimising NginX, Node.JS and networking for heavy workloads
 Tutorial (https://engineering.gosquared.com/optimising-nginx-node-js-and-networking-for-heavy-workloads)
+
+
+## Installing Webmin
+
+```
+rpm -U webmin-1.730-1.noarch.rpm
+wget http://prdownloads.sourceforge.net/webadmin/webmin-1.730-1.noarch.rpm
+```
+
+### Using the Webmin YUM repository
+
+If you like to install and update Webmin via RPM, create the /etc/yum.repos.d/webmin.repo file containing :
+
+```
+[Webmin]
+name=Webmin Distribution Neutral
+#baseurl=http://download.webmin.com/download/yum
+mirrorlist=http://download.webmin.com/download/yum/mirrorlist
+enabled=1
+```
+
+You should also fetch and install my GPG key with which the packages are signed, with the commands :
+```
+wget http://www.webmin.com/jcameron-key.asc
+rpm --import jcameron-key.asc
+```
+
+You will now be able to install with the command :
+
+```
+yum install webmin
+```
+
+All dependencies should be resolved automatically.
+
