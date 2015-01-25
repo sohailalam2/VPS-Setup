@@ -1,4 +1,51 @@
-# Some Important Docker Containers
+# Docker Setup
+
+## Installation
+
+### Installing Docker - CentOS-7
+
+    $ sudo yum install docker
+
+**FirewallD**
+CentOS-7 introduced firewalld, which is a wrapper around iptables and can conflict with Docker.
+
+When firewalld is started or restarted it will remove the DOCKER chain from iptables, preventing Docker from working properly.
+
+When using systemd, firewalld is started before Docker, but if you start or restart firewalld after Docker, you will have to restart the Docker daemon.
+
+### Using Docker
+
+Once Docker is installed, you will need to start the docker daemon.
+
+    sudo service docker start
+    
+If we want Docker to start at boot, we should also:
+
+    sudo chkconfig docker on
+    
+Now let's verify that Docker is working. First we'll need to get the latest centos image.
+
+    sudo docker pull centos
+    
+Next we'll make sure that we can see the image by running:
+
+    sudo docker images centos
+    
+This should generate some output similar to:
+
+    sudo docker images centos
+    
+    REPOSITORY      TAG             IMAGE ID          CREATED             VIRTUAL SIZE
+    centos          latest          0b443ba03958      2 hours ago         297.6 MB
+    
+Run a simple bash shell to test the image:
+
+    sudo docker run -i -t centos /bin/bash
+    
+If everything is working properly, you'll get a simple bash prompt. Type exit to continue.
+
+
+## Some Important Docker Containers
 
 ## NodeJS
 
